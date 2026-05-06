@@ -245,3 +245,7 @@ git push origin main --tags
 - [@crowdstrike/foundry-js](https://github.com/CrowdStrike/foundry-js): Foundry JavaScript SDK
 - [Falcon Foundry sample apps](https://developer.crowdstrike.com/docs/samples/): sample apps on GitHub that use this library for E2E testing
 - [Falcon Foundry documentation](https://docs.crowdstrike.com/r/en-US/er9g8gmh/c3d64B8e): platform documentation for building custom Falcon apps
+
+## License
+
+See [LICENSE](LICENSE) for details.
