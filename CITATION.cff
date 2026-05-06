@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: 'Falcon Foundry Playwright'
+message: >-
+  If you use this software, and wish to cite the origins,
+  please use metadata from this file.
+type: software
+authors:
+  - given-names:
+    family-names: CrowdStrike
+    email: oss-questions@crowdstrike.com
+repository-code: 'https://github.com/CrowdStrike/foundry-playwright'
+url: 'https://www.crowdstrike.com'
+abstract: >-
+  Falcon Foundry Playwright is a community-driven, open source project
+  providing shared Playwright E2E test infrastructure for CrowdStrike
+  Falcon Foundry apps.
+keywords:
+  - crowdstrike
+  - crowdstrike-foundry
+  - crowdstrike-falcon-foundry
+  - falcon-foundry
+  - playwright
+  - e2e-testing
+license: MIT
