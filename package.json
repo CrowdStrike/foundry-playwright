@@ -1,0 +1,53 @@
+{
+  "name": "@crowdstrike/foundry-playwright",
+  "version": "0.5.0",
+  "description": "Playwright end-to-end (E2E) test infrastructure for CrowdStrike Foundry apps",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/CrowdStrike/foundry-playwright.git"
+  },
+  "license": "MIT",
+  "author": "CrowdStrike Foundry Team",
+  "type": "commonjs",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "lint": "concurrently 'npm:lint:*(!fix)' --names 'lint:'",
+    "lint:fix": "concurrently 'npm:lint:*:fix' --names 'fix:'",
+    "lint:js": "eslint . --cache",
+    "lint:js:fix": "eslint . --fix",
+    "lint:types": "tsc --noEmit",
+    "test": "vitest run",
+    "prepublishOnly": "pnpm build"
+  },
+  "dependencies": {
+    "@dotenvx/dotenvx": "1.64.0",
+    "@playwright/test": "1.59.1",
+    "otpauth": "9.5.1"
+  },
+  "devDependencies": {
+    "@eslint/js": "10.0.1",
+    "@types/node": "25.6.0",
+    "@typescript-eslint/eslint-plugin": "8.59.1",
+    "@typescript-eslint/parser": "8.59.1",
+    "@vitest/coverage-v8": "4.1.5",
+    "concurrently": "9.2.1",
+    "eslint": "10.3.0",
+    "prettier": "3.8.3",
+    "typescript": "6.0.3",
+    "vitest": "4.1.5"
+  },
+  "engines": {
+    "node": ">=24"
+  }
+}
