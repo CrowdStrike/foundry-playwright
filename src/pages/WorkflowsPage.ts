@@ -45,25 +45,36 @@ export class WorkflowsPage extends BasePage {
       async () => {
         this.logger.info('Navigating to Fusion SOAR Workflows');
 
-        await this.navigateToPath('/foundry/home', 'Foundry Home');
+        for (let attempt = 0; attempt < 3; attempt++) {
+          try {
+            await this.navigateToPath('/foundry/home', 'Foundry Home');
 
-        // Open hamburger menu
-        const menuButton = this.page.getByTestId('nav-trigger');
-        await menuButton.click();
-        await this.page.waitForLoadState('domcontentloaded');
+            // Open hamburger menu
+            const menuButton = this.page.getByTestId('nav-trigger');
+            await menuButton.click();
+            await this.page.waitForLoadState('domcontentloaded');
 
-        // Click Fusion SOAR in the navigation menu (not the home page cards)
-        const navigation = this.page.locator('nav, [role="navigation"]');
-        const fusionSoarButton = navigation.getByRole('button', { name: 'Fusion SOAR', exact: true });
-        await fusionSoarButton.click();
+            // Click Fusion SOAR in the navigation menu (not the home page cards)
+            const navigation = this.page.locator('nav, [role="navigation"]');
+            const fusionSoarButton = navigation.getByRole('button', { name: 'Fusion SOAR', exact: true });
+            await fusionSoarButton.click();
 
-        // Wait for the Workflows link to be visible and stable after nav expansion
-        const workflowsLink = navigation.getByRole('link', { name: 'Workflows' });
-        await workflowsLink.waitFor({ state: 'visible', timeout: 10000 });
-        await workflowsLink.click();
+            // Wait for the Workflows link to be visible and stable after nav expansion
+            const workflowsLink = navigation.getByRole('link', { name: 'Workflows' });
+            await workflowsLink.waitFor({ state: 'visible', timeout: 10000 });
+            await workflowsLink.click();
 
-        await this.page.waitForLoadState('domcontentloaded');
-        await this.verifyPageLoaded();
+            await this.page.waitForLoadState('domcontentloaded');
+            await this.verifyPageLoaded();
+            return;
+          } catch (error) {
+            if (attempt < 2) {
+              this.logger.info(`Attempt ${attempt + 1} failed (sidebar re-render), retrying...`);
+            } else {
+              throw error;
+            }
+          }
+        }
       },
       'Navigate to Workflows'
     );

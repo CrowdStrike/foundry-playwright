@@ -8,6 +8,10 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ## [Unreleased]
 
+### Fixed
+
+- Add retry loop to sidebar navigation methods to handle DOM re-renders during menu interaction
+
 ## [0.5.0] - 2026-05-07
 
 Initial release of `@crowdstrike/foundry-playwright`, an end-to-end (E2E) test infrastructure library for Falcon Foundry apps.

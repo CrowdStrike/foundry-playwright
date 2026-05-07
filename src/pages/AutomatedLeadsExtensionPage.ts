@@ -10,27 +10,38 @@ export class AutomatedLeadsExtensionPage extends SocketNavigationPage {
     return this.withTiming(async () => {
       this.logger.info('Navigating to Automated Leads page');
 
-      await this.navigateToPath('/foundry/home', 'Foundry home');
-      await this.page.waitForLoadState('domcontentloaded');
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          await this.navigateToPath('/foundry/home', 'Foundry home');
+          await this.page.waitForLoadState('domcontentloaded');
 
-      const menuButton = this.page.getByTestId('nav-trigger');
-      await menuButton.click();
-      await this.page.waitForLoadState('domcontentloaded');
+          const menuButton = this.page.getByTestId('nav-trigger');
+          await menuButton.click();
+          await this.page.waitForLoadState('domcontentloaded');
 
-      const ngsiemButton = this.page.getByTestId('popout-button').filter({ hasText: /Next-Gen SIEM/i });
-      await ngsiemButton.click();
-      await this.page.waitForLoadState('domcontentloaded');
+          const ngsiemButton = this.page.getByTestId('popout-button').filter({ hasText: /Next-Gen SIEM/i });
+          await ngsiemButton.click();
+          await this.page.waitForLoadState('domcontentloaded');
 
-      const automatedLeadsLink = this.page.getByTestId('section-link').filter({ hasText: /Automated leads/i });
-      await automatedLeadsLink.waitFor({ state: 'visible', timeout: 10000 });
-      await automatedLeadsLink.click();
+          const automatedLeadsLink = this.page.getByTestId('section-link').filter({ hasText: /Automated leads/i });
+          await automatedLeadsLink.waitFor({ state: 'visible', timeout: 10000 });
+          await automatedLeadsLink.click();
 
-      await this.page.waitForLoadState('domcontentloaded');
+          await this.page.waitForLoadState('domcontentloaded');
 
-      const pageTitle = this.page.locator('h1, [role="heading"]').first();
-      await expect(pageTitle).toBeVisible({ timeout: 10000 });
+          const pageTitle = this.page.locator('h1, [role="heading"]').first();
+          await expect(pageTitle).toBeVisible({ timeout: 10000 });
 
-      this.logger.success('Navigated to Automated Leads page');
+          this.logger.success('Navigated to Automated Leads page');
+          return;
+        } catch (error) {
+          if (attempt < 2) {
+            this.logger.info(`Attempt ${attempt + 1} failed (sidebar re-render), retrying...`);
+          } else {
+            throw error;
+          }
+        }
+      }
     }, 'Navigate to Automated Leads');
   }
 
