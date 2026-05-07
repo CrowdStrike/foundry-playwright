@@ -6,7 +6,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
-## [Unreleased]
+## [0.5.1] - TBD
+
+### Fixed
+
+- Replace `page.waitForTimeout()` with Node.js `setTimeout` in WorkflowsPage and SmartWaiter polling loops (Playwright anti-pattern)
+- Replace discouraged `page.waitForSelector()` with locator-based `.waitFor()` in AppBuilderPage
+- Remove invalid `{ timeout }` option passed to `waitForLoadState()` (silently ignored by Playwright)
 
 ## [0.5.0] - 2026-05-07
 
