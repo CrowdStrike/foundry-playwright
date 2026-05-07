@@ -171,7 +171,7 @@ export class AppCatalogPage extends BasePage {
 
     await Promise.race([
       this.page.waitForURL(/\/foundry\/(app-catalog|home)/, { timeout: 15000 }),
-      this.page.waitForLoadState('domcontentloaded', { timeout: 15000 })
+      this.page.waitForLoadState('domcontentloaded')
     ]).catch(() => {});
 
     // Wait for "installing" toast
@@ -462,6 +462,7 @@ export class AppCatalogPage extends BasePage {
    * Perform uninstall via menu: open menu, click the given menuitem, confirm in modal.
    */
   private async performUninstall(appName: string, menuItemName: string): Promise<void> {
+    this.logger.info(`Uninstalling ${appName} via "${menuItemName}"`);
     const openMenuButton = this.page.getByRole('button', { name: 'Open menu' });
     await this.waiter.waitForVisible(openMenuButton, { description: 'Open menu button' });
     await this.smartClick(openMenuButton, 'Open menu button');
