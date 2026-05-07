@@ -2,7 +2,7 @@
 
 # @crowdstrike/foundry-playwright
 
-[Playwright](https://playwright.dev/) end-to-end (E2E) test infrastructure for [Falcon Foundry](https://www.crowdstrike.com/platform/foundry/) apps. Provides page objects, authentication, configuration, and utilities so each app only needs to write its app-specific tests.
+[Playwright](https://playwright.dev/) end-to-end (E2E) test infrastructure for [Falcon Foundry](https://www.crowdstrike.com/en-us/platform/next-gen-siem/falcon-foundry/) apps. Provides page objects, authentication, configuration, and utilities so each app only needs to write its app-specific tests.
 
 ## Installation
 
