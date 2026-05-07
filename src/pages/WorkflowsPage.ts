@@ -367,7 +367,8 @@ export class WorkflowsPage extends BasePage {
             return;
           }
 
-          await executionPage.waitForTimeout(5000);
+          // Space out reloads to avoid hammering the server
+          await new Promise(resolve => setTimeout(resolve, 5_000));
           await executionPage.reload({ waitUntil: 'domcontentloaded' });
         }
 
