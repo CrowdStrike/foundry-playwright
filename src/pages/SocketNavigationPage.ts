@@ -16,33 +16,44 @@ export class SocketNavigationPage extends BasePage {
     return this.withTiming(async () => {
       this.logger.info('Navigating to Endpoint Detections page');
 
-      await this.navigateToPath('/foundry/home', 'Foundry home');
-      await this.page.waitForLoadState('domcontentloaded');
+      for (let attempt = 0; attempt < 3; attempt++) {
+        try {
+          await this.navigateToPath('/foundry/home', 'Foundry home');
+          await this.page.waitForLoadState('domcontentloaded');
 
-      const menuButton = this.page.getByTestId('nav-trigger');
-      await menuButton.click();
-      await this.page.waitForLoadState('domcontentloaded');
+          const menuButton = this.page.getByTestId('nav-trigger');
+          await menuButton.click();
+          await this.page.waitForLoadState('domcontentloaded');
 
-      const endpointSecurityButton = this.page.getByRole('button', { name: /Endpoint security/ });
-      await endpointSecurityButton.click();
+          const endpointSecurityButton = this.page.getByRole('button', { name: /Endpoint security/ });
+          await endpointSecurityButton.click();
 
-      const monitorButton = this.page.getByRole('button', { name: 'Monitor', exact: true });
-      await monitorButton.waitFor({ state: 'visible', timeout: 15000 });
-      const isExpanded = await monitorButton.getAttribute('aria-expanded');
-      if (isExpanded !== 'true') {
-        await monitorButton.click();
-        await this.waiter.delay(500);
+          const monitorButton = this.page.getByRole('button', { name: 'Monitor', exact: true });
+          await monitorButton.waitFor({ state: 'visible', timeout: 15000 });
+          const isExpanded = await monitorButton.getAttribute('aria-expanded');
+          if (isExpanded !== 'true') {
+            await monitorButton.click();
+            await this.waiter.delay(500);
+          }
+
+          const endpointDetectionsLink = this.page.getByRole('link', { name: /Endpoint detections/ });
+          await endpointDetectionsLink.click();
+
+          await this.page.waitForLoadState('domcontentloaded');
+
+          const pageTitle = this.page.locator('h1, h2').filter({ hasText: /Detections/i }).first();
+          await expect(pageTitle).toBeVisible({ timeout: 10000 });
+
+          this.logger.success('Navigated to Endpoint Detections page');
+          return;
+        } catch (error) {
+          if (attempt < 2) {
+            this.logger.info(`Attempt ${attempt + 1} failed (sidebar re-render), retrying...`);
+          } else {
+            throw error;
+          }
+        }
       }
-
-      const endpointDetectionsLink = this.page.getByRole('link', { name: /Endpoint detections/ });
-      await endpointDetectionsLink.click();
-
-      await this.page.waitForLoadState('domcontentloaded');
-
-      const pageTitle = this.page.locator('h1, h2').filter({ hasText: /Detections/i }).first();
-      await expect(pageTitle).toBeVisible({ timeout: 10000 });
-
-      this.logger.success('Navigated to Endpoint Detections page');
     }, 'Navigate to Endpoint Detections');
   }
 
