@@ -73,7 +73,7 @@ export class SmartWaiter {
         // Continue polling on errors
       }
 
-      await this.page.waitForTimeout(retryDelay);
+      await new Promise(resolve => setTimeout(resolve, retryDelay));
     }
 
     throw new Error(`Timeout waiting for condition: ${description} after ${timeout}ms`);

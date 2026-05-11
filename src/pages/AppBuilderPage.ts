@@ -127,7 +127,7 @@ export class AppBuilderPage extends BasePage {
         const deployModalButton = this.page.getByRole('button', { name: 'Deploy' }).last();
         await deployModalButton.click();
 
-        await this.page.waitForSelector('text=/Deployed|deployment.*successful/i', { timeout: 120000 });
+        await this.page.locator('text=/Deployed|deployment.*successful/i').waitFor({ state: 'visible', timeout: 120000 });
 
         const progressScreen = this.page.locator('text="Deployment in progress"');
         const isProgressVisible = await progressScreen.isVisible().catch(() => false);
@@ -196,7 +196,7 @@ export class AppBuilderPage extends BasePage {
         const releaseModalButton = this.page.getByRole('button', { name: 'Release' }).last();
         await releaseModalButton.click();
 
-        await this.page.waitForSelector('text="Deployment released successfully"', { timeout: 30000 });
+        await this.page.getByText('Deployment released successfully').waitFor({ state: 'visible', timeout: 30000 });
 
         const releaseToast = this.page.locator('text="Deployment released successfully"');
         await releaseToast.waitFor({ state: 'hidden', timeout: 30000 }).catch(() => {});
@@ -333,7 +333,7 @@ export class AppBuilderPage extends BasePage {
           await provisionToggle.click();
           changesMade = true;
 
-          await this.page.waitForSelector('[role="switch"][aria-label="Provision on install"][aria-checked="false"]', { timeout: 5000 });
+          await this.page.locator('[role="switch"][aria-label="Provision on install"][aria-checked="false"]').waitFor({ state: 'visible', timeout: 5000 });
 
           const dialog = this.page.getByRole('dialog');
           const closeButton = dialog.getByRole('button', { name: 'Close' });
