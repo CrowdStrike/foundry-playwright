@@ -227,18 +227,17 @@ pnpm build
 
 ### Releasing
 
-1. Update `CHANGELOG.md`: replace `TBD` with today's date and add a new `## [Unreleased]` section above it.
+1. Update `CHANGELOG.md`: replace `TBD` with today's date.
 2. Bump the version in `package.json`.
-3. Commit, tag, and push:
+3. Create a PR, get approval, and merge.
+4. Tag main and push the tag:
 
 ```sh
-git add package.json CHANGELOG.md
-git commit -m "Release v0.5.0"
-git tag v0.5.0
-git push origin main --tags
+git tag v0.5.1
+git push origin v0.5.1
 ```
 
-4. Create a GitHub Release from the tag. The `release.yml` workflow publishes to npm automatically when a release is published.
+5. Create a GitHub Release from the tag. The `release.yml` workflow publishes to npm automatically when a release is published.
 
 ## Related
 
