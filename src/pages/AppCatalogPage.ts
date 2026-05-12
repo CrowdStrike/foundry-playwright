@@ -120,6 +120,9 @@ export class AppCatalogPage extends BasePage {
     // App-specific configuration (API credentials, comboboxes, etc.)
     if (installConfig?.configureSettings) {
       this.logger.info('Running app-specific configuration...');
+      await this.page.getByRole('textbox').or(this.page.getByRole('combobox'))
+        .or(this.page.getByRole('button', { name: /next setting/i }))
+        .first().waitFor({ state: 'visible', timeout: 30000 }).catch(() => {});
       await installConfig.configureSettings(this.page);
     }
 
@@ -142,7 +145,7 @@ export class AppCatalogPage extends BasePage {
   private async handlePermissionsDialog(): Promise<void> {
     const acceptButton = this.page.getByRole('button', { name: /accept.*continue/i });
 
-    if (await this.elementExists(acceptButton, 3000)) {
+    if (await this.elementExists(acceptButton, 15000)) {
       this.logger.info('Permissions dialog detected, accepting');
       await this.smartClick(acceptButton, 'Accept and continue button');
       await this.waiter.delay(2000);

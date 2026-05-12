@@ -10,12 +10,11 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/), and this
 
 ### Fixed
 
+- Increase permissions dialog detection timeout from 3s to 15s in `AppCatalogPage` to accommodate slower CI environments
+- Wait for form elements to render before invoking `configureSettings` callback during app install
 - Replace `page.waitForTimeout()` with Node.js `setTimeout` in WorkflowsPage and SmartWaiter polling loops (Playwright anti-pattern)
 - Replace discouraged `page.waitForSelector()` with locator-based `.waitFor()` in AppBuilderPage
 - Remove invalid `{ timeout }` option passed to `waitForLoadState()` (silently ignored by Playwright)
-
-### Fixed
-
 - Add retry loop to sidebar navigation methods to handle DOM re-renders during menu interaction
 
 ## [0.5.0] - 2026-05-07
