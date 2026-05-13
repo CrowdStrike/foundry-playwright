@@ -52,6 +52,35 @@ export class AppBuilderPage extends BasePage {
     );
   }
 
+  /**
+   * Wait for the Change type button to become enabled, or close the dialog if it stays disabled
+   * (indicating no changes to commit). Returns true if the button is enabled and was clicked.
+   */
+  private async clickChangeTypeOrClose(modal: import('@playwright/test').Locator, action: string): Promise<boolean> {
+    const changeTypeButton = modal.getByRole('button', { name: 'Change type' });
+    await changeTypeButton.waitFor({ state: 'visible', timeout: 15000 });
+
+    const isEnabled = await this.page.waitForFunction(
+      (btn) => !btn.disabled && btn.getAttribute('aria-disabled') !== 'true',
+      await changeTypeButton.elementHandle(),
+      { timeout: 10000 }
+    ).then(() => true).catch(() => false);
+
+    if (!isEnabled) {
+      this.logger.info(`Change type button disabled - no changes to ${action}, closing dialog`);
+      const cancelButton = modal.getByRole('button', { name: /cancel|close/i }).first();
+      await cancelButton.click().catch(async () => {
+        await this.page.keyboard.press('Escape');
+      });
+      await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+      this.logger.success(`App ${action} successfully (no additional changes needed)`);
+      return false;
+    }
+
+    await changeTypeButton.click();
+    return true;
+  }
+
   private async navigateToAppDetailsPage(appName: string): Promise<void> {
     await RetryHandler.withPlaywrightRetry(
       async () => {
@@ -108,9 +137,8 @@ export class AppBuilderPage extends BasePage {
         const modal = this.page.locator('dialog, [role="dialog"]').filter({ hasText: 'Commit deployment' });
         await modal.waitFor({ state: 'visible', timeout: 15000 });
 
-        const changeTypeButton = modal.getByRole('button', { name: 'Change type' });
-        await changeTypeButton.waitFor({ state: 'visible', timeout: 15000 });
-        await changeTypeButton.click();
+        // Close dialog and return early if Change type button is disabled (no changes to commit)
+        if (!await this.clickChangeTypeOrClose(modal, 'deployed')) return;
 
         await this.page.locator('[role="listbox"], [role="menu"]').waitFor({ state: 'visible', timeout: 5000 });
         await this.page.keyboard.press('ArrowDown');
@@ -172,9 +200,8 @@ export class AppBuilderPage extends BasePage {
         const modal = this.page.locator('dialog, [role="dialog"]').filter({ hasText: 'Commit release' });
         await modal.waitFor({ state: 'visible', timeout: 15000 });
 
-        const changeTypeButton = modal.getByRole('button', { name: 'Change type' });
-        await changeTypeButton.waitFor({ state: 'visible', timeout: 15000 });
-        await changeTypeButton.click();
+        // Close dialog and return early if Change type button is disabled (no changes to commit)
+        if (!await this.clickChangeTypeOrClose(modal, 'released')) return;
 
         const listbox = this.page.locator('[role="listbox"]');
         await listbox.waitFor({ state: 'visible', timeout: 5000 });
