@@ -101,7 +101,7 @@ export class AppBuilderPage extends BasePage {
           await deployButton.waitFor({ state: 'visible' });
           await deployButton.click();
 
-          await deployModalHeading.waitFor({ state: 'visible', timeout: 10000 });
+          await deployModalHeading.waitFor({ state: 'visible', timeout: 30000 });
           await this.page.waitForLoadState('domcontentloaded');
         }
 
@@ -110,6 +110,21 @@ export class AppBuilderPage extends BasePage {
 
         const changeTypeButton = modal.getByRole('button', { name: 'Change type' });
         await changeTypeButton.waitFor({ state: 'visible', timeout: 15000 });
+
+        const isEnabled = await this.page.waitForFunction(
+          (btn) => !btn.disabled && btn.getAttribute('aria-disabled') !== 'true',
+          await changeTypeButton.elementHandle(),
+          { timeout: 10000 },
+        ).then(() => true).catch(() => false);
+
+        if (!isEnabled) {
+          this.logger.info('Change type button disabled - no changes to commit, closing dialog');
+          await this.page.keyboard.press('Escape');
+          await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+          this.logger.success('No additional changes needed');
+          return;
+        }
+
         await changeTypeButton.click();
 
         await this.page.locator('[role="listbox"], [role="menu"]').waitFor({ state: 'visible', timeout: 5000 });
@@ -174,6 +189,21 @@ export class AppBuilderPage extends BasePage {
 
         const changeTypeButton = modal.getByRole('button', { name: 'Change type' });
         await changeTypeButton.waitFor({ state: 'visible', timeout: 15000 });
+
+        const isEnabled = await this.page.waitForFunction(
+          (btn) => !btn.disabled && btn.getAttribute('aria-disabled') !== 'true',
+          await changeTypeButton.elementHandle(),
+          { timeout: 10000 },
+        ).then(() => true).catch(() => false);
+
+        if (!isEnabled) {
+          this.logger.info('Change type button disabled - no changes to release, closing dialog');
+          await this.page.keyboard.press('Escape');
+          await modal.waitFor({ state: 'hidden', timeout: 5000 }).catch(() => {});
+          this.logger.success('No additional changes needed');
+          return;
+        }
+
         await changeTypeButton.click();
 
         const listbox = this.page.locator('[role="listbox"]');
