@@ -6,6 +6,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.2] - 2026-05-28
+
+### Fixed
+
+- Increase deploy modal heading timeout from 10s to 30s in `AppBuilderPage` for slower CI environments
+- Handle disabled "Change type" button gracefully in `disableWorkflowProvisioning` when no changes to commit
+
+### Documentation
+
+- Document multi-screen configuration pattern for apps with non-deterministic screen order
+
 ## [0.5.1] - 2026-05-12
 
 ### Fixed
