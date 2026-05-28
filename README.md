@@ -114,6 +114,47 @@ setup('install app', async ({ page }) => {
 });
 ```
 
+#### Multi-screen configuration
+
+**Important:** The Falcon UI presents configuration screens in **non-deterministic order** across deployments. Don't hard-code screen order (Screen 1, Screen 2, etc.). Instead, detect each screen by a unique field:
+
+```ts
+setup('install app', async ({ page }) => {
+  const catalog = new AppCatalogPage(page);
+  await catalog.installApp(config.appName, {
+    configureSettings: async (page) => {
+      const nextButton = page.getByRole('button', { name: 'Next setting' });
+
+      // Loop through expected screens, detect each by a unique field
+      for (let screen = 0; screen < 3; screen++) {
+        // Detect which screen we're on by checking for unique fields
+        if (await page.getByRole('textbox', { name: 'clientId' }).isVisible({ timeout: 3000 }).catch(() => false)) {
+          // API Integration screen
+          await page.getByRole('textbox', { name: 'Name' }).fill('My API Integration');
+          await page.getByRole('textbox', { name: 'Host' }).fill('https://api.example.com');
+          await page.getByRole('textbox', { name: 'clientId' }).fill('test-client-id');
+          await page.getByRole('textbox', { name: 'clientSecret' }).fill('test-client-secret');
+        } else if (await page.getByRole('textbox', { name: 'Tenant ID' }).isVisible({ timeout: 3000 }).catch(() => false)) {
+          // Global config screen
+          await page.getByRole('textbox', { name: 'Tenant ID' }).fill('test-tenant-id');
+          await page.getByRole('textbox', { name: 'Refresh token' }).fill('test-refresh-token');
+        } else {
+          // Workflow config screen (or other screen type)
+          await page.getByRole('combobox', { name: 'Target Group' }).click();
+          await page.getByRole('option').first().click();
+        }
+
+        // Click Next if available, otherwise we're on the last screen
+        if (await nextButton.isVisible({ timeout: 2000 }).catch(() => false)) {
+          await nextButton.click();
+          await page.waitForLoadState('domcontentloaded').catch(() => {});
+        }
+      }
+    },
+  });
+});
+```
+
 ```ts
 // playwright.config.ts
 import { defineFoundryConfig } from '@crowdstrike/foundry-playwright';
