@@ -1,5 +1,6 @@
 import { Page, expect, FrameLocator } from '@playwright/test';
 import { SocketNavigationPage } from './SocketNavigationPage';
+import { config } from '../config/TestConfig';
 
 export class DetectionExtensionPage extends SocketNavigationPage {
   constructor(page: Page) {
@@ -33,8 +34,8 @@ export class DetectionExtensionPage extends SocketNavigationPage {
           ? this.page.getByRole('button', { name: extensionName, exact: true })
           : this.page.getByRole('button', { name: new RegExp(extensionName, 'i') }).first();
 
-        await extensionButton.scrollIntoViewIfNeeded({ timeout: 10000 });
-        await expect(extensionButton).toBeVisible({ timeout: 10000 });
+        await extensionButton.scrollIntoViewIfNeeded({ timeout: config.extensionTimeout });
+        await expect(extensionButton).toBeVisible({ timeout: config.extensionTimeout });
 
         const isExpanded = await extensionButton.getAttribute('aria-expanded');
         if (isExpanded === 'false' || isExpanded === null) {
@@ -71,8 +72,8 @@ export class DetectionExtensionPage extends SocketNavigationPage {
     return this.withTiming(
       async () => {
         const extensionButton = this.page.getByRole('button', { name: new RegExp(extensionName, 'i') }).first();
-        await extensionButton.scrollIntoViewIfNeeded({ timeout: 10000 });
-        await expect(extensionButton).toBeVisible({ timeout: 10000 });
+        await extensionButton.scrollIntoViewIfNeeded({ timeout: config.extensionTimeout });
+        await expect(extensionButton).toBeVisible({ timeout: config.extensionTimeout });
         this.logger.success(`Extension '${extensionName}' found in detection details`);
       },
       `Verify extension exists: ${extensionName}`

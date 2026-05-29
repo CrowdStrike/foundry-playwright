@@ -98,6 +98,7 @@ describe('TestConfig', () => {
       const config = TestConfig.getInstance();
       expect(config.defaultTimeout).toBe(45000);
       expect(config.navigationTimeout).toBe(30000);
+      expect(config.extensionTimeout).toBe(30000);
       expect(config.retryAttempts).toBe(3);
     });
 
@@ -105,16 +106,19 @@ describe('TestConfig', () => {
       const config = TestConfig.getInstance();
       expect(config.defaultTimeout).toBe(30000);
       expect(config.navigationTimeout).toBe(15000);
+      expect(config.extensionTimeout).toBe(20000);
       expect(config.retryAttempts).toBe(2);
     });
 
     it('respects custom timeout overrides', () => {
       vi.stubEnv('DEFAULT_TIMEOUT', '99000');
       vi.stubEnv('NAVIGATION_TIMEOUT', '55000');
+      vi.stubEnv('EXTENSION_TIMEOUT', '77000');
       vi.stubEnv('RETRY_ATTEMPTS', '5');
       const config = TestConfig.getInstance();
       expect(config.defaultTimeout).toBe(99000);
       expect(config.navigationTimeout).toBe(55000);
+      expect(config.extensionTimeout).toBe(77000);
       expect(config.retryAttempts).toBe(5);
     });
   });
