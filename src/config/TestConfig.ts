@@ -20,6 +20,7 @@ export class TestConfig {
   // Test configuration
   public readonly defaultTimeout: number;
   public readonly navigationTimeout: number;
+  public readonly extensionTimeout: number;
   public readonly retryAttempts: number;
   public readonly screenshotPath: string;
 
@@ -50,6 +51,7 @@ export class TestConfig {
     // Test timeouts (configurable defaults - longer in CI due to slower hardware)
     this.defaultTimeout = parseInt(process.env.DEFAULT_TIMEOUT || (this.isCI ? '45000' : '30000'));
     this.navigationTimeout = parseInt(process.env.NAVIGATION_TIMEOUT || (this.isCI ? '30000' : '15000'));
+    this.extensionTimeout = parseInt(process.env.EXTENSION_TIMEOUT || (this.isCI ? '30000' : '20000'));
     this.retryAttempts = parseInt(process.env.RETRY_ATTEMPTS || (this.isCI ? '3' : '2'));
 
     // Paths

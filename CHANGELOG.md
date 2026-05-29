@@ -6,6 +6,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.3] - 2026-05-29
+
+### Fixed
+
+- Increase extension expand timeout from 10s to 30s in `DetectionExtensionPage` for slower CI environments, where the detection details panel renders the extension accordion button in just over 10s and the test only passed on retry (reported flaky)
+
+### Added
+
+- Add configurable `extensionTimeout` to `TestConfig` (default 30s CI / 20s local, overridable via `EXTENSION_TIMEOUT`) used by `DetectionExtensionPage` when waiting for extension buttons to render
+
 ## [0.5.2] - 2026-05-28
 
 ### Fixed
