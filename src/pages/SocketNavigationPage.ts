@@ -1,5 +1,6 @@
 import { Page, expect, FrameLocator } from '@playwright/test';
 import { BasePage } from './BasePage';
+import { config } from '../config/TestConfig';
 
 export class SocketNavigationPage extends BasePage {
   constructor(page: Page) {
@@ -181,7 +182,7 @@ export class SocketNavigationPage extends BasePage {
       await this.page.waitForLoadState('domcontentloaded');
     }
 
-    await extensionButton.scrollIntoViewIfNeeded({ timeout: 10000 });
+    await extensionButton.scrollIntoViewIfNeeded({ timeout: config.extensionTimeout });
   }
 
   async verifyExtensionInSocket(extensionName: string): Promise<void> {
@@ -189,7 +190,7 @@ export class SocketNavigationPage extends BasePage {
       await this.scrollToExtension(extensionName);
 
       const extensionButton = this.page.getByRole('button', { name: new RegExp(extensionName, 'i') }).first();
-      await expect(extensionButton).toBeVisible({ timeout: 10000 });
+      await expect(extensionButton).toBeVisible({ timeout: config.extensionTimeout });
 
       this.logger.success(`Extension "${extensionName}" found in socket`);
     }, `Verify extension "${extensionName}" in socket`);
@@ -202,7 +203,7 @@ export class SocketNavigationPage extends BasePage {
       await this.scrollToExtension(extensionName);
 
       const extensionButton = this.page.getByRole('button', { name: new RegExp(extensionName, 'i') }).first();
-      await expect(extensionButton).toBeVisible({ timeout: 10000 });
+      await expect(extensionButton).toBeVisible({ timeout: config.extensionTimeout });
 
       const isExpanded = await extensionButton.getAttribute('aria-expanded');
       if (isExpanded === 'false' || isExpanded === null) {

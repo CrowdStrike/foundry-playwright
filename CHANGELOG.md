@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.4] - 2026-06-11
+
+### Fixed
+
+- Apply the configurable `extensionTimeout` (added in 0.5.3) to the socket-based extension methods in `SocketNavigationPage` (`scrollToExtension`, `verifyExtensionInSocket`, `expandExtensionInSocket`). These still waited for the extension accordion button via a hardcoded 10s timeout, so extensions rendered in the detection/case socket — reached through `expandExtensionInSocket` — timed out on the first attempt in slower CI environments and only passed on retry (reported flaky). This extends the 0.5.3 `DetectionExtensionPage` fix to the remaining extension entry point
+
 ## [0.5.3] - 2026-05-29
 
 ### Fixed

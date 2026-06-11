@@ -1,6 +1,6 @@
 {
   "name": "@crowdstrike/foundry-playwright",
-  "version": "0.5.3",
+  "version": "0.5.4",
   "description": "Playwright end-to-end (E2E) test infrastructure for CrowdStrike Foundry apps",
   "repository": {
     "type": "git",
