@@ -157,7 +157,8 @@ export class WorkflowsPage extends BasePage {
   }
 
   /**
-   * Verify workflow renders (shows the workflow canvas/details)
+   * Verify workflow renders: opens the workflow and waits for its canvas to draw a node.
+   * Every workflow has at least a trigger node, so this fails if the graph never renders.
    */
   async verifyWorkflowRenders(workflowName: string): Promise<void> {
     return this.withTiming(
@@ -166,17 +167,8 @@ export class WorkflowsPage extends BasePage {
 
         await this.openWorkflow(workflowName);
 
-        const hasCanvas = await this.page
-          .locator('[class*="workflow"], [class*="canvas"], [class*="flow"]')
-          .isVisible({ timeout: 5000 })
-          .catch(() => false);
-
-        if (hasCanvas) {
-          this.logger.success(`Workflow renders correctly: ${workflowName}`);
-        } else {
-          this.logger.warn(`Workflow page loaded but canvas not detected: ${workflowName}`);
-          this.logger.info('This is acceptable for E2E - workflow exists and loads');
-        }
+        await expect(this.page.locator('.fusion-node-default').first()).toBeVisible({ timeout: 15000 });
+        this.logger.success(`Workflow renders correctly: ${workflowName}`);
       },
       `Verify workflow renders: ${workflowName}`
     );
