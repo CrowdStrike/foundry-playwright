@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.5] - 2026-10-06
+
+### Fixed
+
+- `WorkflowsPage.verifyWorkflowRenders` now waits for the workflow canvas to draw a node and fails if it never does. It previously called `isVisible()`, which doesn't wait, right after the page's DOM loaded, so it ran before the graph rendered; once the graph was up, its `[class*="workflow"], [class*="canvas"], [class*="flow"]` selector matched several elements and threw a strict mode violation. Both were caught and logged as "canvas not detected", so the method passed whether or not the workflow rendered
+
 ## [0.5.4] - 2026-06-11
 
 ### Fixed
