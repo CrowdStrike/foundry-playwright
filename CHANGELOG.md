@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [0.5.6] - 2026-10-09
+
+### Fixed
+
+- `WorkflowsPage.searchWorkflow` now fills the "Type to filter" textbox in the search popover and clicks Apply. The Falcon console changed the All workflows search control: clicking "Search workflows" no longer reveals an inline searchbox, it opens a popover with a `textbox` labeled "Type to filter" (empty placeholder) and Clear/Apply buttons. The old locator chain (`getByRole('searchbox')`, `input[type="search"]`, `input[placeholder*="Search"]`, `input[placeholder*="filter"]`) matched none of these, so `fill()` timed out after 45s and every test that searches for a workflow failed
+
 ## [0.5.5] - 2026-10-06
 
 ### Fixed
