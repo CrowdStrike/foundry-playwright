@@ -91,13 +91,12 @@ export class WorkflowsPage extends BasePage {
         const searchButton = this.page.getByRole('button', { name: /search workflows/i });
         await searchButton.click();
 
-        const searchBox = this.page.getByRole('searchbox')
-          .or(this.page.locator('input[type="search"]'))
-          .or(this.page.locator('input[placeholder*="Search"]'))
-          .or(this.page.locator('input[placeholder*="filter"]'));
-
+        // "Search workflows" opens a filter popover with a "Type to filter" textbox
+        // and an Apply button; it no longer reveals an inline searchbox.
+        const searchBox = this.page.getByRole('textbox', { name: /type to filter/i });
         await searchBox.fill(workflowName);
-        await this.page.keyboard.press('Enter');
+
+        await this.page.getByRole('button', { name: 'Apply', exact: true }).click();
         await this.page.waitForLoadState('domcontentloaded');
 
         this.logger.success(`Searched for workflow: ${workflowName}`);
