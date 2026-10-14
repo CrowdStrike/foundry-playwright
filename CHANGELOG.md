@@ -6,6 +6,12 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/), and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [Unreleased]
+
+### Fixed
+
+- `DetectionExtensionPage` now scrolls the detection details flyout until the extension button attaches before calling `scrollIntoViewIfNeeded`. Detection details render in a long, scrollable flyout and extension sockets near the bottom lazy-render only once scrolled into view, so the button may not exist in the DOM when the flyout first opens. `scrollIntoViewIfNeeded` cannot scroll to an element that has not rendered, so it timed out in slower CI environments and the render test passed only on retry (reported flaky). A new `scrollDetailsUntilAttached` helper scrolls the flyout toward the bottom until the target button attaches, bounded by `extensionTimeout`
+
 ## [0.5.6] - 2026-10-12
 
 ### Fixed
