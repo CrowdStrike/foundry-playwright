@@ -1,4 +1,4 @@
-import { Page, expect, FrameLocator } from '@playwright/test';
+import { Page, Locator, expect, FrameLocator } from '@playwright/test';
 import { SocketNavigationPage } from './SocketNavigationPage';
 import { config } from '../config/TestConfig';
 
@@ -14,6 +14,25 @@ export class DetectionExtensionPage extends SocketNavigationPage {
   async navigateToDetectionDetails(): Promise<void> {
     await this.navigateToEndpointDetections();
     await this.openFirstDetection();
+  }
+
+  /**
+   * Detection details render in a long, scrollable flyout. Extension sockets live
+   * near the bottom of that list and lazy-render only once scrolled into view, so an
+   * extension button may not exist in the DOM yet when the flyout first opens. Scroll
+   * the flyout toward the bottom until the target button attaches (bounded by
+   * extensionTimeout). scrollIntoViewIfNeeded cannot do this on its own because it
+   * cannot scroll to an element that has not rendered.
+   */
+  private async scrollDetailsUntilAttached(target: Locator): Promise<void> {
+    const flyout = this.page.locator('[role="dialog"]').last();
+    const deadline = Date.now() + config.extensionTimeout;
+    while (Date.now() < deadline) {
+      if ((await target.count()) > 0) return;
+      await flyout.evaluate((el) => { el.scrollTop = el.scrollHeight; }).catch(() => {});
+      await this.page.mouse.wheel(0, 2000).catch(() => {});
+      await this.page.waitForTimeout(1000);
+    }
   }
 
   /**
@@ -34,6 +53,7 @@ export class DetectionExtensionPage extends SocketNavigationPage {
           ? this.page.getByRole('button', { name: extensionName, exact: true })
           : this.page.getByRole('button', { name: new RegExp(extensionName, 'i') }).first();
 
+        await this.scrollDetailsUntilAttached(extensionButton);
         await extensionButton.scrollIntoViewIfNeeded({ timeout: config.extensionTimeout });
         await expect(extensionButton).toBeVisible({ timeout: config.extensionTimeout });
 
@@ -72,6 +92,7 @@ export class DetectionExtensionPage extends SocketNavigationPage {
     return this.withTiming(
       async () => {
         const extensionButton = this.page.getByRole('button', { name: new RegExp(extensionName, 'i') }).first();
+        await this.scrollDetailsUntilAttached(extensionButton);
         await extensionButton.scrollIntoViewIfNeeded({ timeout: config.extensionTimeout });
         await expect(extensionButton).toBeVisible({ timeout: config.extensionTimeout });
         this.logger.success(`Extension '${extensionName}' found in detection details`);
