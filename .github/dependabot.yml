@@ -13,4 +13,4 @@ updates:
       - dependency-name: "actions/setup-node"
         versions: [">=6.3.0"]
       - dependency-name: "pnpm/action-setup"
-        versions: [">=6.1.0"]
+        versions: [">=4.2.1"]
